@@ -2,22 +2,6 @@ import pytest
 from src.masks import mask_card_number, mask_account_number
 
 
-@pytest.fixture
-def card_numbers():
-    return [
-        ("1234567890123456", "1234 56** **** 3456"),
-        ("9876543210987654", "9876 54** **** 7654")
-    ]
-
-
-@pytest.fixture
-def account_numbers():
-    return [
-        ("1234567890", "**90"),
-        ("9876543210", "**10")
-    ]
-
-
 @pytest.mark.parametrize("card_number, expected", [
     ("1234567890123456", "1234 56** **** 3456"),
     ("9876543210987654", "9876 54** **** 7654")

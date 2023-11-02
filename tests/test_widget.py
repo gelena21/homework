@@ -2,22 +2,6 @@ import pytest
 from src.widget import type_card, format_date
 
 
-@pytest.fixture
-def masked_card_numbers():
-    return [
-        ("Visa Platinum 7000 7922 8960 6361", "Visa Platinum 79******6361"),
-        ("Счет 73654108430135874305", "Счет **4305")
-    ]
-
-
-@pytest.fixture
-def sample_dates():
-    return [
-        ("2019-07-03T18:35:29.512364", "03.07.2019"),
-        ("2018-06-30T02:08:58.425572", "30.06.2018")
-    ]
-
-
 @pytest.mark.parametrize("input_data, expected_output", [
     ("Visa Platinum 7000792289606361", "Visa Platinum 7000 79** **** 6361"),
     ("Счет 73654108430135874305", "Счет **4305")
