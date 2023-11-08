@@ -6,5 +6,6 @@ def mask_card_number(card_number: str) -> str:
 
 def mask_account_number(account_number: str) -> str:
     """Функция для маскировки номера счета пользователя"""
+    account_number = account_number.replace("Счет", "").replace(" ", "")
     masked_number = f"**{account_number[-4:]}"
     return masked_number
