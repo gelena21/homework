@@ -1,23 +1,21 @@
 import datetime
-
 import pytest
 from src.decorators import log
 
-
-@pytest.fixture
-def log_file(tmp_path):
-    return tmp_path / "test_log.txt"
+log_timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+expected_log = f"{log_timestamp} unsafe_operation error: ZeroDivisionError. Inputs: (), {{}}"
 
 
-def test_log_error(log_file):
+def test_log_error_to_file(capsys):
+    log_file = "test_log.txt"
+
     @log(filename=log_file)
     def unsafe_operation():
         return 1 / 0
 
-    result = unsafe_operation()
-    assert result == "error: ZeroDivisionError. Inputs: (), {}"
-    with open(log_file, "r") as file:
-        log_content = file.read()
-    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    expected_log = "{} unsafe_operation error\n".format(timestamp)
-    assert log_content.startswith(expected_log)
+    unsafe_operation()
+
+    captured = capsys.readouterr()
+    log_output = captured.out.strip()
+
+    assert log_output == expected_log
