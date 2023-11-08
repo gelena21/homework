@@ -1,13 +1,11 @@
-from typing import Any, Optional
+from typing import Dict, List, Optional
+from datetime import datetime
 
 
-def filter_by_state(
-    data: list[dict[str, str]], state: Optional[str] = "EXECUTED"
-) -> list[dict[str, str]]:
+def filter_dicts_by_state(dicts: List[Dict[str, str]], state: Optional[str] = 'EXECUTED') -> List[Dict[str, str]]:
     """
     Функция для фильтрации списка словарей по значению ключа 'state'.
      Args:
-        data (list[dict[str, str]]): Список словарей, который нужно отфильтровать.
         state (Optional[str], optional): Значение ключа 'state', по которому нужно выполнить фильтрацию.
                                         По умолчанию установлено значение "EXECUTED".
 
@@ -15,21 +13,20 @@ def filter_by_state(
         list[dict[str, str]]: Отфильтрованный список словарей.
 
     """
-    filtered_data = list(filter(lambda x: x.get("state") == state, data))
-    return filtered_data
+    filtered_dicts = [d for d in dicts if d.get('state') == state]
+    return filtered_dicts
 
 
-def sort_by_date(data: Any, reverse: bool = True) -> list[dict[str, str]]:
+def sort_dicts_by_date(data: List[dict], reverse: Optional[bool] = True) -> List[dict]:
     """
-    Функция для сортировки списка словарей по значению ключа 'date'.
+    Сортирует список словарей по убыванию или возрастанию даты.
+
     Args:
-        data (Any): Список словарей, который нужно отсортировать.
-        reverse (bool, optional): Указывает, следует ли сортировать в обратном порядке (по убыванию).
-                                  По умолчанию установлено значение True.
+        data (List[dict]): Список словарей, каждый из которых содержит ключ 'date' с датой в формате '%Y-%m-%dT%H:%M:%S.%f'.
+        reverse (Optional[bool]): Флаг сортировки по убыванию. По умолчанию True (сортировка по убыванию).
 
     Returns:
-        list[dict[str, str]]: Отсортированный список словарей.
-
+        List[dict]: Отсортированный список словарей.
     """
-    sorted_data = sorted(data, key=lambda x: x.get("date"), reverse=reverse)
+    sorted_data = sorted(data, key=lambda x: datetime.strptime(x['date'], '%Y-%m-%dT%H:%M:%S.%f'), reverse=reverse)
     return sorted_data
