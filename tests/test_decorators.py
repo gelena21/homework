@@ -1,21 +1,30 @@
 import datetime
-import pytest
+
 from src.decorators import log
 
-log_timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-expected_log = f"{log_timestamp} unsafe_operation error: ZeroDivisionError. Inputs: (), {{}}"
+
+@log()
+def test_console() -> None:
+    def my_function(x: int, y: int) -> float:
+        return x / y
+
+    now = datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S')
+    assert my_function(10, 0) == f'{now}, Возникла ошибка:division by zero. my_function, Inputs: (10, 0)'
+    assert my_function(10, 5) == f'{now}, my_function, ok\n'
 
 
-def test_log_error_to_file(capsys):
-    log_file = "test_log.txt"
+def test_log_to_file() -> None:
+    filename = "test_logs.txt"
 
-    @log(filename=log_file)
-    def unsafe_operation():
-        return 1 / 0
+    @log(filename="test_logs.txt")
+    def my_function(x: int, y: int) -> int:
+        return x + y
 
-    unsafe_operation()
+    my_function(10, 2)
 
-    captured = capsys.readouterr()
-    log_output = captured.out.strip()
+    with open(filename, 'r') as file:
+        logs = file.read()
+    now = datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S')
 
-    assert log_output == expected_log
+    expected_logs = f"{now}, my_function, ok\n"
+    assert logs == expected_logs

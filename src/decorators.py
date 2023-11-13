@@ -1,40 +1,34 @@
-import datetime
 from functools import wraps
+from typing import Callable, Any
+import datetime
 
 
-def log(filename=None):
+def log(filename=None) -> Any:
     """
-    Декоратор для логирования вызовов функций и результатов их работы.
-
-    Args:
-        filename (str, optional): Имя файла, в который будут записываться логи.
-            Если не передано, логи будут выводиться в консоль. По умолчанию None.
-
-    Returns:
-        function: Обернутая функция с функциональностью логирования.
+    Декоратор log
+    принимает один необязательный аргумент filename, определяет имя файла, в который будут записываться логи. Если
+    filename
+    не задан, то логи будут выводиться в консоль
+    :param filename: filename = None
     """
-
-    def decorator(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            """
-            Внутренняя функция-обертка, логирующая вызовы функций и результаты их работы.
-            """
+    def wrapped(function: Callable) -> Any:
+        @wraps(function)
+        def inner(*args, **kwargs) -> Any:
             try:
-                result = func(*args, **kwargs)
-                status = "ok"
+                result = function(*args, **kwargs)
+                message = f"{datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S')}, {function.__name__} ok\n"
             except Exception as e:
                 result = None
-                status = f"error: {type(e).__name__}. Inputs: {args}, {kwargs}"
-                print(f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} {func.__name__} {status}")
-                raise e
+                message = (f"{datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S')} {function.__name__} "
+                           f"error: {str ( e )} Inputs: {args}, {kwargs}\n.")
+
             if filename:
-                with open(filename, "a") as file:
-                    file.write(f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} {func.__name__} {status}\n")
+                with open(filename, 'a', encoding='utf-8') as file:
+                    file.write(message)
             else:
-                print(f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} {func.__name__} {status}")
+                print(message)
+
             return result
+        return inner
 
-        return wrapper
-
-    return decorator
+    return wrapped
