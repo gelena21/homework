@@ -1,4 +1,5 @@
 import datetime
+import os.path
 
 from src.decorators import log
 
@@ -14,17 +15,19 @@ def test_console() -> None:
 
 
 def test_log_to_file() -> None:
-    filename = "test_logs.txt"
+    filename = "test.txt"
+    if os.path.exists(filename):
+        os.remove(filename)
 
-    @log(filename="test_logs.txt")
-    def my_function(x: int, y: int) -> int:
+    @log(filename)
+    def my_function(x: int, y: int) -> float:
         return x + y
 
+    now = datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S')
     my_function(10, 2)
 
     with open(filename, 'r') as file:
-        logs = file.read()
-    now = datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S')
+        log_mess = file.read().strip()
 
-    expected_logs = f"{now}, my_function, ok\n"
-    assert logs == expected_logs
+    expected_logs = f"{now}, my_function ok"
+    assert log_mess == expected_logs
