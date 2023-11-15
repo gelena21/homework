@@ -37,7 +37,11 @@ def convert_to_rubles(transaction):
     :return: Сумма транзакции в рублях (float) или ошибка ValueError.
     """
     amount = transaction.get('amount')
-    currency = transaction.get('currency', 'RUB') 
+    currency = transaction.get('currency', 'RUB')
+
+    if amount is None:
+        raise ValueError("Транзакция не содержит 'amount'")
+
     if currency == 'RUB':
         return float(amount)
     else:
