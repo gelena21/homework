@@ -15,7 +15,7 @@ def load_transactions(file_path):
         return []
 
     try:
-        with open(file_path, 'r', encoding='utf-8') as file:
+        with open(file_path, "r", encoding="utf-8") as file:
             data = json.load(file)
 
         if not isinstance(data, list):
@@ -36,13 +36,15 @@ def convert_to_rubles(transaction):
     :param transaction: Словарь с данными о транзакции, включая сумму и валюту.
     :return: Сумма транзакции в рублях (float) или ошибка ValueError.
     """
-    amount = transaction.get('amount')
-    currency = transaction.get('currency', 'RUB')
+    amount = transaction.get("amount")
+    currency = transaction.get("currency")
 
     if amount is None:
         raise ValueError("Транзакция не содержит 'amount'")
 
-    if currency == 'RUB':
+    if currency == "RUB":
         return float(amount)
     else:
-        raise ValueError("Транзакция выполнена не в рублях. Укажите транзакцию в рублях.")
+        raise ValueError(
+            "Транзакция выполнена не в рублях. Укажите транзакцию в рублях"
+        )
