@@ -18,23 +18,21 @@ def load_transactions(file_path):
     :param file_path: Путь к JSON-файлу с данными о транзакциях.
     :return: Список словарей с данными о транзакциях.
     """
-
-    if not os.path.exists(file_path):
-        print(f"Файл {file_path} не найден.")
-        return []
-
     try:
         with open(file_path, "r", encoding="utf-8") as file:
             data = json.load(file)
 
         if not isinstance(data, list):
-            print(f"Файл {file_path} не содержит список транзакций.")
+            logger.error(f"Файл {file_path} не содержит список транзакций.")
             return []
 
         return data
 
+    except FileNotFoundError as e:
+        logger.error(f"Файл {file_path} не найден: {e}")
+        return []
     except json.JSONDecodeError as e:
-        print(f"Ошибка при декодировании JSON в файле {file_path}: {e}")
+        logger.error(f"Ошибка при декодировании JSON в файле {file_path}: {e}")
         return []
 
 
@@ -49,11 +47,11 @@ def convert_to_rubles(transaction):
     currency = transaction.get("currency")
 
     if amount is None:
+        logger.error("Транзакция не содержит 'amount'")
         raise ValueError("Транзакция не содержит 'amount'")
 
     if currency == "RUB":
         return float(amount)
     else:
-        raise ValueError(
-            "Транзакция выполнена не в рублях. Укажите транзакцию в рублях"
-        )
+        logger.error("Транзакция выполнена не в рублях. Укажите транзакцию в рублях")
+        raise ValueError("Транзакция выполнена не в рублях. Укажите транзакцию в рублях")
