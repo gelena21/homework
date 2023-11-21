@@ -1,6 +1,6 @@
 import csv
+
 import pandas as pd
-from coverage import data
 
 
 def read_csv(file_path):
@@ -14,8 +14,8 @@ def read_csv(file_path):
     - list: Список словарей, представляющих финансовые операции.
     """
     transactions = []
-    with open(file_path, newline='', encoding='utf-8') as csvfile:
-        reader = csv.DictReader(csvfile, delimiter=';')
+    with open(file_path, newline="", encoding="utf-8") as csvfile:
+        reader = csv.DictReader(csvfile, delimiter=";")
         for row in reader:
             transactions.append(row)
     return transactions
@@ -32,5 +32,5 @@ def read_xlsx(file_path):
     - list: Список словарей, представляющих финансовые операции.
     """
     df = pd.read_excel(file_path)
-    transactions = df.to_dict('records')
+    transactions = df.to_dict("records")
     return transactions
