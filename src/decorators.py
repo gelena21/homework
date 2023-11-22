@@ -1,6 +1,6 @@
-from functools import wraps
-from typing import Callable, Any
 import datetime
+from functools import wraps
+from typing import Any, Callable
 
 
 def log(filename=None) -> Any:
@@ -11,6 +11,7 @@ def log(filename=None) -> Any:
     не задан, то логи будут выводиться в консоль
     :param filename: filename = None
     """
+
     def wrapped(function: Callable) -> Any:
         @wraps(function)
         def inner(*args, **kwargs) -> Any:
@@ -19,16 +20,19 @@ def log(filename=None) -> Any:
                 message = f"{datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S')}, {function.__name__} ok\n"
             except Exception as e:
                 result = None
-                message = (f"{datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S')} {function.__name__} "
-                           f"error: {str ( e )} Inputs: {args}, {kwargs}\n.")
+                message = (
+                    f"{datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S')} {function.__name__} "
+                    f"error: {str(e)} Inputs: {args}, {kwargs}\n."
+                )
 
             if filename:
-                with open(filename, 'a', encoding='utf-8') as file:
+                with open(filename, "a", encoding="utf-8") as file:
                     file.write(message)
             else:
                 print(message)
 
             return result
+
         return inner
 
     return wrapped

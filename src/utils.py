@@ -1,6 +1,5 @@
 import json
 import logging
-import os
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -54,4 +53,6 @@ def convert_to_rubles(transaction):
         return float(amount)
     else:
         logger.error("Транзакция выполнена не в рублях. Укажите транзакцию в рублях")
-        raise ValueError("Транзакция выполнена не в рублях. Укажите транзакцию в рублях")
+        raise ValueError(
+            "Транзакция выполнена не в рублях. Укажите транзакцию в рублях"
+        )
